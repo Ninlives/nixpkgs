@@ -949,6 +949,8 @@ in
 
   glyr = callPackage ../tools/audio/glyr { };
 
+  howdy = callPackage ../tools/security/howdy { };
+
   hpe-ltfs = callPackage ../tools/backup/hpe-ltfs { };
 
   httperf = callPackage ../tools/networking/httperf { };
@@ -17110,6 +17112,8 @@ in
   pam_mount = callPackage ../os-specific/linux/pam_mount { };
 
   pam_pgsql = callPackage ../os-specific/linux/pam_pgsql { };
+
+  pam_python = callPackage ../os-specific/linux/pam_python { };
 
   pam_ssh_agent_auth = callPackage ../os-specific/linux/pam_ssh_agent_auth { };
 

@@ -122,6 +122,14 @@ let
         '';
       };
 
+      howdyAuth = mkOption {
+        default = config.services.howdy.enable;
+        type = types.bool;
+        description = ''
+          If set, face recognition provided by howdy will be used
+        '';
+      };
+
       oathAuth = mkOption {
         default = config.security.pam.oath.enable;
         type = types.bool;
@@ -352,6 +360,8 @@ let
               "auth requisite ${pkgs.oathToolkit}/lib/security/pam_oath.so window=${toString oath.window} usersfile=${toString oath.usersFile} digits=${toString oath.digits}"}
           ${let yubi = config.security.pam.yubico; in optionalString cfg.yubicoAuth
               "auth ${yubi.control} ${pkgs.yubico-pam}/lib/security/pam_yubico.so mode=${toString yubi.mode} ${optionalString (yubi.mode == "client") "id=${toString yubi.id}"} ${optionalString yubi.debug "debug"}"}
+          ${optionalString cfg.howdyAuth
+              "auth sufficient ${pkgs.pam_python}/lib/security/pam_python.so ${config.services.howdy.package}/lib/security/howdy/pam.py"}
         '' +
           # Modules in this block require having the password set in PAM_AUTHTOK.
           # pam_unix is marked as 'sufficient' on NixOS which means nothing will run
