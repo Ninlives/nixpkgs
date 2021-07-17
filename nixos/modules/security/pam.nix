@@ -408,7 +408,7 @@ let
           ${let oath = config.security.pam.oath; in optionalString cfg.oathAuth
               "auth requisite ${pkgs.oathToolkit}/lib/security/pam_oath.so window=${toString oath.window} usersfile=${toString oath.usersFile} digits=${toString oath.digits}"}
           ${let yubi = config.security.pam.yubico; in optionalString cfg.yubicoAuth
-              "auth ${yubi.control} ${pkgs.yubico-pam}/lib/security/pam_yubico.so mode=${toString yubi.mode} ${optionalString (yubi.mode == "client") "id=${toString yubi.id}"} ${optionalString yubi.debug "debug"}"}
+              "auth ${yubi.control} ${pkgs.yubico-pam}/lib/security/pam_yubico.so mode=${toString yubi.mode} ${optionalString (yubi.challengeResponsePath != null) "chalresp_path=${yubi.challengeResponsePath}"} ${optionalString (yubi.mode == "client") "id=${toString yubi.id}"} ${optionalString yubi.debug "debug"}"}
         '' +
           # Modules in this block require having the password set in PAM_AUTHTOK.
           # pam_unix is marked as 'sufficient' on NixOS which means nothing will run
@@ -821,6 +821,16 @@ in
           Use "challenge-response" for offline validation using YubiKeys with HMAC-SHA-1
           Challenge-Response configurations. See the man-page ykpamcfg(1) for further
           details on how to configure offline Challenge-Response validation.
+
+          More information can be found <link
+          xlink:href="https://developers.yubico.com/yubico-pam/Authentication_Using_Challenge-Response.html">here</link>.
+        '';
+      };
+      challengeResponsePath = mkOption {
+        default = null;
+        type = types.path;
+        description = ''
+          If not null, set the path used by yubico pam module where the challenge expected response is stored.
 
           More information can be found <link
           xlink:href="https://developers.yubico.com/yubico-pam/Authentication_Using_Challenge-Response.html">here</link>.
